@@ -38,7 +38,7 @@ const createUser = (req, res) => {
 const editUser = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true, returnDocument: 'after' })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -52,7 +52,7 @@ const editUser = (req, res) => {
 };
 
 const editUserAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { runValidators: true })
+  User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { runValidators: true, returnDocument: 'after' })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
