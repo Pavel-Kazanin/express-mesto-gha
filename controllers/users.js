@@ -8,9 +8,12 @@ const getUsers = (req, res) => {
 
 const getUserById = (req, res) => {
   User.findById(req.params._id)
+    .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'CastError') {
+        res.status(400).send({ message: `Переданы некорректные данные. ${err.message}` });
+      } else if (err.name === 'DocumentNotFoundError') {
         res.status(404).send({ message: `Пользователь с id: ${req.params._id} не найден` });
       } else {
         res.status(500).send({ message: `Произошла ошибка ${err}` });
