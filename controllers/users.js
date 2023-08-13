@@ -25,10 +25,10 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные' });
+        res.status(400).send({ message: `Переданы некорректные данные ${err.message}` });
       } else {
         res.status(500).send({ message: `Произошла ошибка ${err}` });
       }
@@ -39,11 +39,12 @@ const editUser = (req, res) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, { runValidators: true, returnDocument: 'after' })
+    .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         res.status(400).send({ message: `Переданы некорректные данные. ${err.message}` });
-      } else if (err.name === 'CastError') {
+      } else if (err.name === 'DocumentNotFoundError') {
         res.status(404).send({ message: `Пользователь с id: ${req.user._id} не найден` });
       } else {
         res.status(500).send({ message: `Произошла ошибка ${err}` });
@@ -53,11 +54,12 @@ const editUser = (req, res) => {
 
 const editUserAvatar = (req, res) => {
   User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { runValidators: true, returnDocument: 'after' })
+    .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         res.status(400).send({ message: `Переданы некорректные данные. ${err.message}` });
-      } else if (err.name === 'CastError') {
+      } else if (err.name === 'DocumentNotFoundError') {
         res.status(404).send({ message: `Пользователь с id: ${req.user._id} не найден` });
       } else {
         res.status(500).send({ message: `Произошла ошибка ${err}` });
