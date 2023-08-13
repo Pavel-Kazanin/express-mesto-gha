@@ -42,7 +42,7 @@ const editUser = (req, res) => {
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || 'ValidationError') {
         res.status(400).send({ message: `Переданы некорректные данные. ${err.message}` });
       } else if (err.name === 'DocumentNotFoundError') {
         res.status(404).send({ message: `Пользователь с id: ${req.user._id} не найден` });
