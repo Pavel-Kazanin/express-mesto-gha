@@ -5,4 +5,9 @@ const urlValidator = {
   message: 'Некорректный URL'
 };
 
-module.exports = { urlValidator };
+const emailValidator = {
+  validator: (v) => validator.isEmail(v),
+  message: 'Некорректный email'
+};
+
+module.exports = { urlValidator, emailValidator };

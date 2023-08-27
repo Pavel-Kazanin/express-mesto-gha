@@ -13,7 +13,8 @@
           "functions": "never"
         }],
         "linebreak-style": ["error", "unix"],
-        "eol-last": ["error", "never"]
-
+        "eol-last": ["error", "never"],
+        "object-curly-newline": ["error", { "minProperties": 10, "consistent": true }],
+        "consistent-return": ["off"]
     }
 }
