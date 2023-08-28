@@ -32,7 +32,7 @@ app.post('/signup', celebrate({
     avatar: Joi.string().uri({
       scheme: [
         'url',
-        /^(http|https):\/\/(www.)*([a-z0-9-]+).*(ru|com|org|in)([a-zA-Z0-9-._\/~:?#\[\]@!$&'\(\)\*\+,;=])*/gm
+        /^(http|https):\/\/(www.)*([a-z0-9-]+)*.(ru|com|org|in|dev)([a-zA-Z0-9-._\/~:?#\[\]@!$&'\(\)\*\+,;=])*/gm
       ]
     }),
     email: Joi.string().required().email(),
