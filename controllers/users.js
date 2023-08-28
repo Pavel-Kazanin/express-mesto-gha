@@ -31,7 +31,7 @@ const createUser = (req, res, next) => {
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ name, about, avatar, email, password: hash }))
-    .then((user) => res.status(201).send({ data: user }))
+    .then(() => res.status(201).send({ message: 'Пользователь успешно зарегистрирован' }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new CastError('Переданы некорректные данные.'));
@@ -65,7 +65,7 @@ const editUserAvatar = (req, res, next) => {
     .orFail()
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new CastError('Переданы некорректные данные.'));
       } else if (err.name === 'DocumentNotFoundError') {
         next(new NotFoundError(`Пользователь с id: ${req.params._id} не найден`));
