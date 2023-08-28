@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const { urlRegex } = require('../utils/constants');
 const {
   getUsers,
   getUserById,
@@ -23,7 +24,7 @@ router.patch('/me', celebrate({
 }), editUser);
 router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().uri(),
+    avatar: Joi.string().pattern(urlRegex),
   }).unknown(true),
 }), editUserAvatar);
 

@@ -14,7 +14,8 @@ const cardSchema = new mongoose.Schema({
         return /^(http|https):\/\/(www.)*([a-z0-9\-]+).(ru|com|org|in|dev)([a-zA-Z0-9\-\._\/~:?#\[\]@!$&'()*+,;=])*/.test(v);
       },
       message: 'Некорректный URL'
-    }
+    },
+    required: true
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
