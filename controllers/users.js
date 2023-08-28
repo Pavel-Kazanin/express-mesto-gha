@@ -31,7 +31,10 @@ const createUser = (req, res, next) => {
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({ name, about, avatar, email, password: hash }))
-    .then((user) => res.status(201).send({ data: user }))
+    .then((user) => {
+      const { name, about, avatar, email } = user;
+      res.status(201).send({ data: { name, about, avatar, email }})
+      })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastError('Переданы некорректные данные.'));
