@@ -1,7 +1,6 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const CastError = require('../errors/cast-err');
-const UnauthorizeError = require('../errors/unauthorize-err');
 const ForbiddenError = require('../errors/forbidden-err');
 
 const getCards = (req, res, next) => {
@@ -28,18 +27,19 @@ const deleteCard = (req, res, next) => {
   Card.findById(req.params._id)
     .orFail()
     .then((card) => {
+      if (!card) {
+        throw new NotFoundError(`Пользователь с id: ${req.params._id} не найден`);
+      }
       if (req.user._id !== card.owner.toString()) {
         throw new ForbiddenError('Нельзя удалить карточку другого пользователя');
       }
-      Card.findByIdAndRemove(card._id)
-        .then(() => res.status(200).send({ message: 'Карточка удалена' }))
-        .catch(next);
+
+      return Card.deleteOne(card);
     })
+    .then(() => res.status(200).send({ message: 'Карточка удалена' }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastError('Переданы некорректные данные.'));
-      } else if (err.name === 'DocumentNotFoundError') {
-        next(new NotFoundError(`Пользователь с id: ${req.params._id} не найден`));
       } else {
         next(err);
       }
