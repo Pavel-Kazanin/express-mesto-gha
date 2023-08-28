@@ -1,6 +1,5 @@
 const express = require('express');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors, celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
@@ -18,8 +17,8 @@ mongoose.connect(DB_URL, {
 }).then(() => console.log('connection success'));
 app.use(helmet());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
