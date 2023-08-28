@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { urlValidator } = require('../utils/utils');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -10,7 +9,12 @@ const cardSchema = new mongoose.Schema({
   },
   link: {
     type: String,
-    validate: urlValidator,
+    validate: {
+      validator: function(v) {
+        return /^(http|https):\/\/(www.)*([a-z0-9\-]+).(ru|com|org|in|dev)([a-zA-Z0-9\-\._\/~:?#\[\]@!$&'()*+,;=])*/.test(v);
+      },
+      message: 'Некорректный URL'
+    },
     required: true
   },
   owner: {

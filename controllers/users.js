@@ -33,8 +33,10 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({ name, about, avatar, email, password: hash }))
     .then(() => res.status(201).send({ message: 'Пользователь успешно зарегистрирован' }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         next(new CastError('Переданы некорректные данные.'));
+      } else if (err.name === 'ValidationError') {
+        next(new CastError(err.message));
       } else if (err.name === 'MongoServerError') {
         next(new MongoServerError(`Пользователь с email: ${email} уже существует`));
       } else {
