@@ -1,7 +1,7 @@
 const validator = require('validator');
 
 const urlValidator = {
-  validator: (v) => validator.isURL(v),
+  validator: (v) => { /^(http|https):\/\/(www.)*([a-z0-9-]+).*(ru|com|org|in)([a-zA-Z0-9-._\/~:?#\[\]@!$&'\(\)\*\+,;=])*/gm.test(v); },
   message: 'Некорректный URL'
 };
 
