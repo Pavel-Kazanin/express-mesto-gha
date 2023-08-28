@@ -1,5 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors, celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
@@ -17,8 +18,8 @@ mongoose.connect(DB_URL, {
 }).then(() => console.log('connection success'));
 app.use(helmet());
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -45,10 +46,10 @@ app.use('*', auth, () => {
 
 app.use(errors());
 
-app.use((err, res, next) => {
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
 
-  next(res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message }));
+  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
 });
 
 app.listen(PORT, () => {
