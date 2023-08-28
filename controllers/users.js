@@ -27,14 +27,32 @@ const getUserById = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name,
+    about,
+    avatar,
+    email,
+    password,
+  } = req.body;
 
   bcrypt.hash(password, 10)
-    .then((hash) => User.create({ name, about, avatar, email, password: hash }))
-    .then((user) => {
-      const { name, about, avatar, email } = user;
-      res.status(201).send({ data: { name, about, avatar, email }})
-      })
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
+    .then(() => {
+      res.status(201).send({
+        data: {
+          name,
+          about,
+          avatar,
+          email,
+        },
+      });
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new CastError('Переданы некорректные данные.'));
@@ -108,5 +126,5 @@ const getUserInfo = (req, res, next) => {
 };
 
 module.exports = {
-  getUsers, getUserById, createUser, editUser, editUserAvatar, login, getUserInfo
+  getUsers, getUserById, createUser, editUser, editUserAvatar, login, getUserInfo,
 };

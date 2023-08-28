@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const validator = require('validator');
 const { emailValidator } = require('../utils/utils');
 const UnauthorizeError = require('../errors/unauthorize-err');
 
@@ -21,23 +20,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: function(v) {
-        return /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net)([a-zA-Z0-9\-\._\/~:?#\[\]@!$&'()*+,;=])*/.test(v);
-      },
-      message: 'Некорректный URL'
-    }
+      validator: (v) => /^(http|https):\/\/(www.)*([a-z0-9-.]+).(ru|com|org|in|dev|net)([a-zA-Z0-9\-._/~:?#[\]@!$&'()*+,;=])*/.test(v),
+      message: 'Некорректный URL',
+    },
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    validate: emailValidator
+    validate: emailValidator,
   },
   password: {
     type: String,
     required: true,
-    select: false
-  }
+    select: false,
+  },
 }, { versionKey: false });
 
 userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {

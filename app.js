@@ -1,11 +1,11 @@
 const express = require('express');
 const helmet = require('helmet');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { errors, celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
 const { urlRegex } = require('./utils/constants');
+const NotFoundError = require('./errors/not-found-err');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
@@ -13,12 +13,12 @@ const app = express();
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
-  autoIndex: true
+  autoIndex: true,
 }).then(() => console.log('connection success'));
 app.use(helmet());
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -39,16 +39,16 @@ app.post('/signup', celebrate({
 app.use('/users', auth, require('./routes/users'));
 app.use('/cards', auth, require('./routes/cards'));
 
-app.use('*', (req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
+app.use('*', auth, () => {
+  throw new NotFoundError('Страница не найдена');
 });
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
+app.use((err, res, next) => {
   const { statusCode = 500, message } = err;
 
-  res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message });
+  next(res.status(statusCode).send({ message: statusCode === 500 ? 'На сервере произошла ошибка' : message }));
 });
 
 app.listen(PORT, () => {

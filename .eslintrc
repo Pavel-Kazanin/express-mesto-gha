@@ -4,19 +4,6 @@
     ],
     "rules": {
         "no-underscore-dangle": ["error", { "allow": ["_id"] }],
-        "no-console": "off",
-        "comma-dangle": ["error", {
-          "arrays": "never",
-          "objects": "only-multiline",
-          "imports": "never",
-          "exports": "never",
-          "functions": "never"
-        }],
-        "linebreak-style": ["error", "unix"],
-        "eol-last": ["error", "never"],
-        "object-curly-newline": ["error", { "minProperties": 10, "consistent": true }],
-        "consistent-return": ["off"],
-        "no-unused-vars": ["error", {"args": "none"}],
-        "no-useless-escape": ["error"]
+        "no-console": "off"
     }
 }

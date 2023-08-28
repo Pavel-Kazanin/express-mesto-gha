@@ -25,7 +25,6 @@ const createCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   Card.findById(req.params._id)
-    .orFail()
     .then((card) => {
       if (!card) {
         throw new NotFoundError(`Пользователь с id: ${req.params._id} не найден`);
@@ -77,5 +76,5 @@ const deleteLike = (req, res, next) => {
 };
 
 module.exports = {
-  getCards, createCard, deleteCard, addLike, deleteLike
+  getCards, createCard, deleteCard, addLike, deleteLike,
 };
