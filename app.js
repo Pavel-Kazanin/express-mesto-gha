@@ -36,11 +36,13 @@ app.post('/signup', celebrate({
   }).unknown(true),
 }), createUser);
 
-app.use('/users', auth, require('./routes/users'));
-app.use('/cards', auth, require('./routes/cards'));
+app.use(auth);
 
-app.use('*', auth, () => {
-  throw new NotFoundError('Страница не найдена');
+app.use('/users', require('./routes/users'));
+app.use('/cards', require('./routes/cards'));
+
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Страница не найдена'));
 });
 
 app.use(errors());
