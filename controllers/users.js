@@ -104,7 +104,7 @@ const login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
-      res.cookie('token', token, { httpOnly: true, credentials: 'include' });
+      res.cookie('token', token, { httpOnly: true });
       res.send({ message: 'Авторизация прошла успешно' });
     })
     .catch(next);
