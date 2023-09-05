@@ -18,7 +18,7 @@ mongoose.connect(DB_URL, {
 app.use(helmet());
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'localhost:3000');
   const { method } = req;
   const requestHeaders = req.headers['access-control-request-headers'];
   if (method === 'OPTIONS') {
