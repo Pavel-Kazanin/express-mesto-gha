@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const { errors, celebrate, Joi } = require('celebrate');
 const auth = require('./middlewares/auth');
 const { createUser, login } = require('./controllers/users');
@@ -17,17 +18,11 @@ mongoose.connect(DB_URL, {
 }).then(() => console.log('connection success'));
 app.use(helmet());
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'localhost:3000');
-  const { method } = req;
-  const requestHeaders = req.headers['access-control-request-headers'];
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Headers', requestHeaders);
-    return res.end();
-  }
+const corsOptions = {
+  origin: ['http://localhost:5500'],
+};
 
-  return next();
-});
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
