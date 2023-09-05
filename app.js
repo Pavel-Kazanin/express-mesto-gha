@@ -17,6 +17,14 @@ mongoose.connect(DB_URL, {
 }).then(() => console.log('connection success'));
 app.use(helmet());
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
